@@ -18,8 +18,9 @@ def group(uid,title):
     m.update(key + title + uid + key)
     sign = m.hexdigest()
     print requests.post('http://teacher.'+str(flag)+'.mistong.com/api/creategroup',
+    # print requests.post('http://teacher.ewt360.com/api/creategroup',
                         data={'uid':uid,'title':title,'sign':sign}).content
-# group('80034683', '杭州市第二中学')
+# group('8922973', '杭州市第二中学')
 
 
 # 关联多个管理员账号
@@ -29,8 +30,9 @@ def add_admin(uid,gid):
     m.update(key + gid + uid + key)
     sign = m.hexdigest()
     print requests.post('http://teacher.'+str(flag)+'.mistong.com/api/AddAdmin',
+    # print requests.post('http://teacher.ewt360.com/api/AddAdmin',
                         data={'uid':uid,'gid':gid,'sign':sign}).content
-# add_admin("80036684,80036686",'487277')
+# add_admin("8922973,",'786293')
 
 
 def join_group1(username,groupid):
@@ -51,7 +53,7 @@ def join_group(groupid, num=100):
                                       data='gno='+str(groupid)+'&msg='+username,
                                       headers={'Content-Type':'application/x-www-form-urlencoded','cookie':'user=tk='+t}).content
 
-# join_group(442708, 22)
+join_group(841518, 20)
 
 
 # SELECT id FROM ETeacher_Group WHERE groupno = 667723
@@ -62,7 +64,7 @@ def accept(groupid):
     while True:
         if flag == 235:
             t = re.findall("(?<=user=tk=).*?(?=;)", str(requests.get(
-                'http://my.'+str(flag)+'.mistong.com/login/prelogin?sid=2&username=' + 'laoshi001' + '&password=123456').headers))[0]
+                'http://my.'+str(flag)+'.mistong.com/login/prelogin?sid=2&username=' + 'laoshi002' + '&password=123456').headers))[0]
         else:
             t = re.findall("(?<=user=tk=).*?(?=;)", str(requests.get(
                 'http://my.' + str(
@@ -73,7 +75,9 @@ def accept(groupid):
         else:
             conn = pymssql.connect(host='10.0.0.64', user='ewt360', password='ewt360@123', database='ETeacher')
         cur = conn.cursor()
-        cur.execute("SELECT top 10 id,StudentID,message FROM ETeacher_Group_Apply  WHERE GroupID = (SELECT id FROM ETeacher_Group WHERE groupno ="+str(groupid)+")")
+        # 旧版本
+        # cur.execute("SELECT top 10 id,StudentID,message FROM ETeacher_Group_Apply  WHERE GroupID = (SELECT id FROM ETeacher_Group WHERE groupno ="+str(groupid)+")")
+        cur.execute("SELECT top 10 id,userid,message FROM ETeacher_Class_Apply WHERE GroupID ="+str(groupid))
         res = cur.fetchall()
 
         with open('ids.txt', 'w') as f:
@@ -94,6 +98,6 @@ def accept(groupid):
         time.sleep(2)
 
 
-# accept(487277)
+# accept(225912)
 
 
